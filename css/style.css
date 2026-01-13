@@ -1,0 +1,37 @@
+/* Linux / Ubuntu */
+.linux-btn {
+    background-color: #E95420;
+    color: white;
+    border: none;
+    transition: background-color 0.2s;
+}
+.linux-btn:hover {
+    background-color: #D84315;
+}
+
+/* Windows */
+.windows-btn {
+    background-color: #0078D6;
+    color: white;
+    border: none;
+    transition: background-color 0.2s;
+}
+.windows-btn:hover {
+    background-color: #005A9E;
+}
+
+/* macOS */
+.mac-btn {
+    background-color: #1D1D1F;
+    color: white;
+    border: none;
+    transition: background-color 0.2s;
+}
+.mac-btn:hover {
+    background-color: #b8b8ce;
+}
+
+/* Иконки */
+.btn i {
+    vertical-align: middle;
+}
