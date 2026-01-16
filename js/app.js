@@ -806,7 +806,7 @@ class page {
     var x = $(e).html().toLowerCase();
     $('.nav-link').removeClass('active');
     if(x == 'home' || x == 'about') $(e).addClass('active');
-    if(x == 'home') { this.read_dir(); this.list('') }
+    if(x == 'home') this.list('')
     if(x == 'backup') B.update();
     $('.nav').hide();
     $('#'+x).show();
