@@ -112,9 +112,6 @@ class my_backup {
     var t1 = fs.existsSync(this.src);
     var t2 = fs.existsSync(this.dst);
     
-    if(t1) $('#backup_src_btn').hide();
-    if(t2) $('#backup_dst_btn').hide();
-    
     $('#backup_list').empty();
     if(t1 && t2) {
       var src = this.read_dir(this.src);
