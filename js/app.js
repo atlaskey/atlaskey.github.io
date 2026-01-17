@@ -15,9 +15,6 @@ const { shell } = require('electron');
 const git = require("isomorphic-git");
 const http = require("isomorphic-git/http/node");
 
-const { Readable } = require("stream");
-globalThis.ReadableStream = Readable;
-
 const { Blob } = require('buffer');
 const { ZipReader, ZipWriter, BlobReader, BlobWriter } = require('@zip.js/zip.js');
 
