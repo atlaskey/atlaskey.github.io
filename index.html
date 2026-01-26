@@ -74,6 +74,121 @@
         </div>
       </div>
     </section>
+
+    <section class="py-5 bg-light border-bottom">
+      <div class="container">
+        <h2>What Is This Program Used For?</h2>
+        <p>This program was developed to securely store private documentation in two separate locations:</p>
+        <ul>
+          <li>WebDAV-based cloud storage</li>
+          <li>Locally on the user’s computer</li>
+        </ul>
+        <p>To use this program, you must have access to a WebDAV cloud storage, which can be either free or paid.</p>
+    
+        <h4>WebDAV Storage Providers</h4>
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Provider</th>
+                <th>Free Storage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Yandex.Disk</td>
+                <td>5 GB</td>
+              </tr>
+              <tr>
+                <td>CloudMe</td>
+                <td>3 GB</td>
+              </tr>
+              <tr>
+                <td>4shared</td>
+                <td>15 GB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Note:</strong> Free storage limits and WebDAV availability may change depending on the provider’s current policy. Please refer to the provider’s official website for the most up-to-date information.</p>
+      </div>    
+    </section>
+
+    <section class="py-5 bg-white border-bottom">
+      <div class="container">
+        <h2>Connecting to Yandex.Disk via WebDAV</h2>
+        <ol>
+          <li>Register an account on <a href="https://passport.yandex.com/registration" target="_blank">yandex.ru</a>.</li>
+          <li>Create an <strong>application password</strong> for WebDAV access: <a href="https://id.yandex.ru/security/app-passwords" target="_blank">Yandex App Passwords</a>.</li>
+          <li>Launch the <strong>Atlaskey</strong> program.</li>
+          <li>On first launch, create a <strong>master key</strong> for the secure database. This key will serve as the password for your encrypted ZIP archives.<br>
+              Stored at: <code>documents\atlaskey\config.zip</code></li>
+          <li>Go to the <strong>Tools</strong> tab and install required components by following on-screen instructions.</li>
+          <li>Go to the <strong>WebDAV</strong> tab and enter your connection details:</li>
+          <ul>
+            <li>WebDAV URL: https://webdav.yandex.ru</li>
+            <li>User: your Yandex username (part of email before @yandex.ru)</li>
+            <li>Password: WebDAV application password</li>
+          </ul>
+          <li>Click <strong>Check Connection</strong>. If successful, the button will turn green.</li>
+          <li>Upon success, a folder named <strong>cryptdav</strong> is created in your WebDAV cloud for encrypted documents.</li>
+          <li>Use buttons:<br>
+              <strong>Mount WebDAV</strong> – mount the storage<br>
+              <strong>Unmount WebDAV</strong> – unmount the storage
+            <ul>
+              <li>Windows: appears as drive (e.g., X:), auto-assigns another letter if taken</li>
+              <li>Linux/macOS: mounted to <code>documents\atlaskey\cryptdav</code></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </section>
+    
+    <section class="py-5 bg-light border-bottom">
+      <div class="container">
+        <h2>Managing Document Backups</h2>
+
+        <p>
+          To manage backups of your documents in the WebDAV cloud, go to the Documents tab.<br>
+          Here you can perform the following five operations:
+        </p>
+        <ol>
+          <li>Create backups in ZIP format (protected with master key) at <code>documents\atlaskey\backup</code></li>
+          <li>Restore files from a backup to WebDAV cloud</li>
+          <li>Delete files/folders from WebDAV cloud and backups</li>
+          <li>Rename files</li>
+          <li>Create new folders/documents (built-in editor included)</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="py-5 bg-white border-bottom">
+      <div class="container"></div>
+        <h2>Data Recovery Scenarios</h2>
+        <h3>Scenario 1: WebDAV access lost</h3>
+        <ol>
+          <li>Register a new account and create a new WebDAV app password.</li>
+          <li>Update User/Password in Atlaskey WebDAV tab.</li>
+          <li>Connect to new cloud; folder <strong>cryptdav</strong> will be empty.</li>
+          <li>Go to the <strong>Documents</strong> tab and select Recovery.</li>
+          <li>Data restored from backup to new WebDAV cloud.</li>
+        </ol>
+    
+        <hr>
+
+        <h3>Scenario 2: Lost PC with backups</h3>
+        <p><strong>Note:</strong> Keep <code>documents\atlaskey\config.zip</code> separately (USB, phone, another PC, cloud).</p>
+        <ol>
+          <li>Take new computer.</li>
+          <li>Download Atlaskey from this site.</li>
+          <li>Launch program; <code>documents\atlaskey\</code> is created.</li>
+          <li>If <code>config.zip</code> saved, place it in this folder and restart app; otherwise create new master key.</li>
+          <li>Connect to existing WebDAV cloud.</li>
+          <li>Go to the <strong>Documents</strong> tab and create new backup from cloud to local PC.</li>
+          <li>All data restored and available locally.</li>
+        </ol>
+      </div>
+    </section>
     
     <section class="py-4 bg-dark border-bottom">
       <div class="row align-items-center text-white">
