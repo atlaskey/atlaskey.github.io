@@ -1,3 +1,14 @@
+function hideme() {
+  $('.hideme').css('cursor','pointer').click(e => {
+    e.stopImmediatePropagation();
+    $(e.target).next().toggle();
+  });
+};
+
+hideme();
+
+//----------------------------------------------------------
+
 class page {
   ask() {
     const modalElement = document.getElementById('ask');

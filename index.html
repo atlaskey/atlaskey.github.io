@@ -76,9 +76,9 @@
     </section>
 
     <section class="py-5 bg-light border-bottom">
-      <div class="container">
-        <h2>What Is This Program Used For?</h2>
-        <p>This program was developed to securely store private documentation in two separate locations:</p>
+      <h2 class="hideme text-center">What Is This Program Used For?</h2>
+      <div class="container" style="display: none;">
+        <br><p>This program was developed to securely store private documentation in two separate locations:</p>
         <ul>
           <li>WebDAV-based cloud storage</li>
           <li>Locally on the user’s computer</li>
@@ -115,20 +115,21 @@
     </section>
 
     <section class="py-5 bg-white border-bottom">
-      <div class="container">
-        <h2>Connecting to Yandex.Disk via WebDAV</h2>
+      <h2 class="hideme text-center">Connecting to Yandex.Disk via WebDAV</h2>
+      <div class="container" style="display: none;">
+        <br>
         <ol>
           <li>Register an account on <a href="https://passport.yandex.com/registration" target="_blank">yandex.ru</a>.</li>
           <li>Create an <strong>application password</strong> for WebDAV access: <a href="https://id.yandex.ru/security/app-passwords" target="_blank">Yandex App Passwords</a>.</li>
           <li>Launch the <strong>Atlaskey</strong> program.</li>
           <li>On first launch, create a <strong>master key</strong> for the secure database. This key will serve as the password for your encrypted ZIP archives.<br>
-              Stored at: <code>documents\atlaskey\config.zip</code></li>
+              Stored in the user's Documents folder (platform-dependent path): <code>documents\atlaskey\config.zip</code></li>
           <li>Go to the <strong>Tools</strong> tab and install required components by following on-screen instructions.</li>
           <li>Go to the <strong>WebDAV</strong> tab and enter your connection details:</li>
           <ul>
             <li>WebDAV URL: https://webdav.yandex.ru</li>
             <li>User: your Yandex username (part of email before @yandex.ru)</li>
-            <li>Password: WebDAV application password</li>
+            <li>Password: WebDAV application password (created in step 2)</li>
           </ul>
           <li>Click <strong>Check Connection</strong>. If successful, the button will turn green.</li>
           <li>Upon success, a folder named <strong>cryptdav</strong> is created in your WebDAV cloud for encrypted documents.</li>
@@ -145,8 +146,9 @@
     </section>
     
     <section class="py-5 bg-light border-bottom">
-      <div class="container">
-        <h2>Managing Document Backups</h2>
+      <h2 class="hideme text-center">Managing Document Backups</h2>
+      <div class="container" style="display: none;">
+        <br>
         <p>
           To manage backups of your documents in the WebDAV cloud, go to the <strong>Documents</strong> tab.<br>
           Here you can perform the following five operations:
@@ -163,8 +165,9 @@
     </section>
 
     <section class="py-5 bg-white border-bottom">
-      <div class="container"></div>
-        <h2>Data Recovery Scenarios</h2>
+      <h2 class="hideme text-center">Data Recovery Scenarios</h2>
+      <div class="container" style="display: none;">
+        <br>
         <h3>Scenario 1: WebDAV access lost</h3>
         <ol>
           <li>Register a new account and create a new WebDAV app password.</li>
