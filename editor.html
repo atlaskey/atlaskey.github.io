@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="app" content="atlaskey">
+    <title>Word v10.0 - Base</title>
+    <style>
+body {
+	margin: 0;
+	background: #f0f0f0; font-family: sans-serif; display: flex; justify-content: center; padding: 20px;
+}
+.paper {
+	width: 820px;
+	
+	background: white;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.toolbar-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+.toolbar {
+    background: #fafafa;
+    padding: 10px;
+	height: 36px;
+    border-bottom: 1px solid #ddd;
+
+    display: flex;
+    gap: 5px;
+	flex-wrap: wrap;
+}
+.sub-toolbar-full {
+    width: 100%;
+    background: #f1f3f4;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 0;
+
+    display: none;
+    justify-content: center;
+
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+.btn { width: 35px; height: 35px; cursor: pointer; border: 1px solid #ccc; background: white; }
+.btn:hover { background: #eee; }
+.divider { width: 1px; background: #ddd; margin: 0 5px; }
+#editor { flex-grow: 1; padding: 40px; outline: none; line-height: 1.5; font-size: 16px; }
+
+.btn-select {
+    height: 35px;
+    border: 1px solid #ccc;
+    background: white;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+
+.nav-toggle-btn {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+
+.nav-panel {
+    position: fixed;
+    left: -250px; 
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #fff;
+    border-right: 1px solid #ddd;
+    transition: 0.3s;
+    z-index: 999;
+    padding-top: 70px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.nav-panel.active { left: 0; }
+
+.nav-header { padding: 10px 20px; font-weight: bold; border-bottom: 1px solid #eee; color: #666; }
+
+.nav-links { padding: 10px; overflow-y: auto; max-height: calc(100% - 100px); }
+
+.nav-item { 
+    display: block; 
+    padding: 5px 10px; 
+    text-decoration: none; 
+    color: #333; 
+    font-size: 14px; 
+    border-radius: 4px;
+}
+.nav-item:hover { background: #f0f0f0; }
+.nav-h1 { font-weight: bold; margin-left: 0; }
+.nav-h2 { margin-left: 15px; font-size: 13px; }
+.nav-h3 { margin-left: 30px; font-size: 12px; color: #777; }
+
+.color-sidebar {
+    position: fixed;
+    left: 20px;
+    top: 80px;
+    width: 60px; 
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.color-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+
+.color-label { 
+    font-size: 10px; 
+    color: #666; 
+    font-weight: bold; 
+    text-align: center;
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 5px;
+}
+
+.color-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.color-box:hover { transform: scale(1.2); border: 1px solid #000; }
+
+
+#editor a {
+    text-decoration: underline;
+    padding: 1px 2px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+
+#editor a[href*="://"] {
+    color: #0000ee !important;
+    background-color: #e8f0fe !important;
+}
+
+
+#editor a:not([href*="://"]) {
+    color: #5d4037 !important; 
+    background-color: #fff9c4 !important; 
+}
+
+
+#editor ul.todo-list {
+    list-style-type: none;
+    padding-left: 25px;
+}
+
+#editor ul.todo-list li {
+    list-style-type: none; 
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+
+#editor ul.todo-list li::before {
+    content: "☐"; 
+    position: absolute;
+    left: -20px;
+    font-size: 18px;
+    color: #4285f4;
+}
+
+
+#editor ul.todo-list li.done {
+    text-decoration: line-through;
+    color: #888;
+}
+
+#editor ul.todo-list li.done::before {
+    content: "☑"; 
+}
+
+#editor ul.todo-list ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+
+#editor ol {
+    list-style-type: none;
+    counter-reset: item; 
+    padding-left: 30px;
+}
+#editor ol li {
+    display: block;
+}
+#editor ol li:before {
+    content: counters(item, ".") ". "; 
+    counter-increment: item;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+
+.editor-popup {
+    position: fixed;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: none;
+    z-index: 1000;
+    border-radius: 4px;
+}
+.popup-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.popup-item:hover { background: #f0f0f0; }
+
+
+
+.img-resizable {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    vertical-align: bottom;
+}
+
+.img-resizable:hover {
+    border: 1px solid #4285f4;
+}
+
+
+.img-resizable img {
+    width: 100%;
+    height: auto; 
+    display: block;
+    pointer-events: none;
+}
+
+
+.img-delete-btn {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 24px;
+    height: 24px;
+    background: #ea4335;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 102;
+    opacity: 0;
+    border: 2px solid white;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: opacity 0.2s;
+}
+
+.img-resizable:hover .img-delete-btn {
+    opacity: 1;
+}
+
+
+.resizer-handle {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    background: #4285f4;
+    cursor: nwse-resize;
+    z-index: 101;
+    border: 2px solid white;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.img-resizable:hover .resizer-handle {
+    opacity: 1;
+}
+
+
+.code-container {
+    background: #282c34;
+    border-radius: 6px;
+    margin: 20px 0;
+    position: relative;
+    display: block;
+    border: 1px solid #3e4451;
+    overflow: hidden; 
+}
+
+
+.code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(66, 133, 244, 0.8);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    z-index: 10;
+    font-family: sans-serif;
+    transition: 0.2s;
+}
+.code-copy-btn:hover { background: #34a853; opacity: 1; }
+
+
+.code-content {
+    font-family: 'Consolas', 'Courier New', monospace; 
+    color: #abb2bf;
+    padding: 15px; 
+    white-space: pre-wrap;
+    outline: none;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 4;
+}
+
+
+.pass-container {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin: 20px 0;
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+
+.pass-content {
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: #333;
+    padding: 15px;
+    outline: none;
+    font-size: 14px;
+    min-height: 1em;
+}
+
+
+.pass-content.masked {
+    filter: blur(6px);
+    user-select: none; 
+}
+
+
+.pass-controls {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 4px;
+    z-index: 10;
+}
+
+.pass-btn {
+    background: #f1f3f4;
+    color: #5f6368;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+.pass-btn:hover { background: #e8eaed; }
+
+
+#editor table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    table-layout: fixed;
+}
+
+#editor table, 
+#editor table.grid-gray td {
+    border: 1px solid #ccc !important;
+}
+
+
+#editor table.grid-black td {
+    border: 1px solid #000 !important;
+}
+
+
+#editor table.grid-none td {
+    border: 1px dotted #eee !important; 
+}
+
+
+#editor table.grid-none.final-view td {
+    border: none !important;
+}
+
+#editor td, #editor th {
+    border: 1px solid #ccc;
+    padding: 8px;
+    min-height: 1.5em;
+    word-wrap: break-word;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.sub-toolbar-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: sans-serif;
+    font-size: 13px;
+    color: #444;
+}
+
+.sub-toolbar-container input {
+    width: 45px;
+    padding: 4px;
+    border: 1px solid #bdc1c6;
+    border-radius: 4px;
+    outline: none;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.btn-close:hover { color: #000; }
+
+
+#editor td.selected-cell {
+    background-color: #e8f0fe !important;
+    outline: 2px solid #4285f4;
+    z-index: 10;
+}
+
+.popup-section {
+    border-bottom: 1px solid #eee;
+}
+.popup-section:last-child { border: none; }
+
+.popup-divider {
+    height: 1px;
+    background-color: #eee; 
+    margin: 4px 0; 
+    pointer-events: none; 
+}
+
+
+body.dark-theme {
+    --bg-color: #1e1e1e;
+    --text-color: #d4d4d4;
+    --toolbar-bg: #2d2d2d;
+    --editor-bg: #252526;
+}
+
+body.dark-theme {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+body.dark-theme #toolbar, 
+body.dark-theme .sub-toolbar-full,
+body.dark-theme #navigation-panel {
+    background-color: var(--toolbar-bg);
+    border-color: #444;
+}
+
+body.dark-theme #editor {
+    background-color: var(--editor-bg);
+    color: var(--text-color);
+}
+
+
+.find-highlight {
+    background-color: #ff9632;
+    color: black;
+}
+
+#save-document-btn {
+    transition: transform 0.2s, color 0.2s;
+}
+
+
+#save-document-btn.dirty {
+    color: orange;          
+    transform: scale(1.1);  
+    animation: pulse 1s infinite; 
+}
+
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+#prompt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#prompt-overlay.hidden {
+  display: none;
+}
+
+#prompt-box {
+  background: #fff;
+  padding: 16px;
+  width: 300px;      
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;         
+}
+
+#prompt-input {
+  width: 100%;       
+  box-sizing: border-box; 
+  padding: 6px 8px;
+  font-size: 14px;
+}
+
+.prompt-buttons {
+  margin-top: 10px;
+  text-align: right;
+}
+</style>
+</head>
+<body>
+    <div class="paper">
+		<div class="toolbar-wrapper">
+			<div class="toolbar" id="toolbar">
+				<select class="btn-select" data-cmd="formatBlock">
+					<option value="" selected disabled>Styles...</option> 
+					<option value="p">Normal</option>
+					<option value="h1">Header 1</option>
+					<option value="h2">Header 2</option>
+					<option value="h3">Header 3</option>
+				</select>
+
+				<button class="btn" data-cmd="bold"><b>B</b></button>
+				<button class="btn" data-cmd="italic"><i>I</i></button>
+				<button class="btn" data-cmd="underline"><u>U</u></button>
+				<div class="divider"></div>
+				<button class="btn" data-cmd="justifyLeft">L</button>
+				<button class="btn" data-cmd="justifyCenter">C</button>
+				<button class="btn" data-cmd="justifyRight">R</button>
+
+				<div class="divider"></div>
+				<button class="btn" id="btn-table-panel" title="Insert Table">📅</button>
+				<select class="btn-select" id="list-selector">
+					<option value="" selected disabled>Lists...</option>
+					<option value="insertUnorderedList">Bullet</option>
+					<option value="insertOrderedList">Numbered</option>
+					<option value="todo">Todo List</option>
+				</select>
+				<button class="btn" data-cmd="createLink" title="Add Link">🔗</button>
+				<button class="btn" data-cmd="createLink" data-type="comment" title="Add Comment">💬</button>
+				<button class="btn" data-cmd="insertCodeWrapper" title="Insert Code Block">💻</button>
+				<button class="btn" data-cmd="insertPasswordBlock" title="Insert Password Block">🔒</button>
+				<button class="btn" id="dark-mode-toggle" title="Toggle Dark/Light Mode">🌓</button>
+				<button class="btn" id="find-panel-toggle" title="Find and Replace">🔍</button>
+				<div class="divider"></div>
+				<button class="btn" id="save-document-btn" title="Save Document">💾</button>
+			</div>
+			
+			<div id="table-toolbar" class="sub-toolbar-full" style="display: none;">
+				<div class="sub-toolbar-container">
+					<label>Rows:</label>
+					<input type="number" id="table-rows" value="3" min="1" max="20">
+					<label>Cols:</label>
+					<input type="number" id="table-cols" value="3" min="1" max="20">
+					<button class="btn-sm" id="btn-insert-table">Insert Table</button>
+					<button class="btn-close" id="btn-close-table">✕</button>
+				</div>
+			</div>
+
+			<div id="find-toolbar" class="sub-toolbar-full" style="display: none;">
+				<div class="sub-toolbar-container">
+					<input type="text" id="find-input" placeholder="Find..." style="width: 150px;">
+					<input type="text" id="replace-input" placeholder="Replace with..." style="width: 150px;">
+					<button class="btn-sm" id="btn-find-next">Find Next</button>
+					<button class="btn-sm" id="btn-replace">Replace</button>
+					<button class="btn-sm" id="btn-replace-all">Replace All</button>
+					<button class="btn-close" id="btn-close-find">✕</button>
+				</div>
+			</div>
+		</div>
+        
+        <div id="editor" contenteditable="true" spellcheck="false">
+            <h3 style="text-align: center; "><span data-complete="true" style="text-align: start; color: rgb(123, 31, 162);">Created with Atlaskey</span></h3>
+            <p style="text-align: center;">For more information, visit <a href="https://atlaskey.github.io" target="_blank" title="Right click to edit">https://atlaskey.github.io</a></p>
+        </div>
+    </div>
+    
+    <button id="nav-toggle" class="nav-toggle-btn">☰</button>
+
+    
+    <div id="navigation-panel" class="nav-panel">
+        <div class="nav-header">Document Outline</div>
+        <div id="nav-content" class="nav-links"></div>
+    </div>
+
+    <div class="color-sidebar">
+        <div class="color-section">
+            <div class="color-label">TEXT</div>
+            <div class="color-grid">
+                <div class="color-box clear" data-cmd="foreColor" data-value="#000000" title="Clear Text Color" style="background: #000; display: flex; justify-content: center; align-items: center;">
+                    <span style="color: white; font-size: 14px;">✕</span>
+                </div>
+                <div class="color-box" data-cmd="foreColor" data-value="#4285f4" style="background: #4285f4;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#ea4335" style="background: #ea4335;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#fbbc05" style="background: #fbbc05;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#34a853" style="background: #34a853;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#ff6d01" style="background: #ff6d01;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#46bdc6" style="background: #46bdc6;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#7b1fa2" style="background: #7b1fa2;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#9e9e9e" style="background: #9e9e9e;"></div>
+                <div class="color-box" data-cmd="foreColor" data-value="#212121" style="background: #212121;"></div>
+            </div>
+        </div>
+    
+        <div class="color-section">
+            <div class="color-label">BG</div>
+            <div class="color-grid">
+                <div class="color-box" data-cmd="hiliteColor" data-value="#e8f0fe" style="background: #e8f0fe;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#fce8e6" style="background: #fce8e6;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#fef7e0" style="background: #fef7e0;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#e6f4ea" style="background: #e6f4ea;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#f3e5f5" style="background: #f3e5f5;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#f1f3f4" style="background: #f1f3f4;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#e0e0e0" style="background: #e0e0e0;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#fff9c4" style="background: #fff9c4;"></div>
+                <div class="color-box" data-cmd="hiliteColor" data-value="#d1c4e9" style="background: #d1c4e9;"></div>
+                <div class="color-box clear" data-cmd="backColor" data-value="transparent" title="Clear BG" style="background: #fff; border: 1px dashed #ccc; display: flex; justify-content: center; align-items: center;">
+                    <span style="color: #ccc; font-size: 14px;">✕</span>
+                </div>
+            </div>
+        </div>
+		
+		<div id="prompt-overlay" class="hidden">
+			<div id="prompt-box">
+				<p id="prompt-msg"></p>
+				<input id="prompt-input" />
+				<div class="prompt-buttons">
+					<button id="prompt-ok">OK</button>
+					<button id="prompt-cancel">Cancel</button>
+				</div>
+			</div>
+		</div>
+    </div>
+
+    <script>
+class MyEditor {
+    constructor(editorId, toolbarId) {
+        this.el = document.getElementById(editorId);
+        this.toolbar = document.getElementById(toolbarId);
+        this.startCell = null;
+        this.isSelecting = false;
+
+        if (this.el && this.toolbar) {
+            this.init();
+        }
+		
+        this.isDocumentDirty = false;
+        this.initEditorObserver();
+    }
+
+    init() {
+        this.navPanel = document.getElementById('navigation-panel');
+        this.navContent = document.getElementById('nav-content');
+        this.navToggle = document.getElementById('nav-toggle');
+        this.colorSidebar = document.querySelector('.color-sidebar');
+        this.tableToolbar = document.getElementById('table-toolbar');
+        this.findToolbar = document.getElementById('find-toolbar');
+        document.execCommand('styleWithCSS', false, true);
+        
+        this.createPopup();
+        this.setupEvents();
+        this.openDocument();
+    }
+
+    createPopup() {
+        this.popup = document.createElement('div');
+        this.popup.className = 'editor-popup';
+        this.popup.innerHTML = `
+            <div class="popup-section" id="list-actions">
+                <div class="popup-item" data-action="indent">Increase Indent</div>
+                <div class="popup-item" data-action="outdent">Decrease Indent</div>
+            </div>
+            <div class="popup-section" id="table-actions" style="display:none">
+                <div class="popup-item" data-action="addRow">Add Row</div>
+                <div class="popup-item" data-action="delRow">Delete Row</div>
+                <div class="popup-item" data-action="addCol">Add Column</div>
+                <div class="popup-item" data-action="delCol">Delete Column</div>
+                <div class="popup-divider"></div>
+                <div class="popup-item" data-action="tableStyle" data-value="grid-gray">Grid: Gray</div>
+                <div class="popup-item" data-action="tableStyle" data-value="grid-black">Grid: Black</div>
+                <div class="popup-item" data-action="tableStyle" data-value="grid-none">Grid: Hidden</div>
+                <div class="popup-divider"></div>
+                <div class="popup-item" data-action="split" id="split-btn" style="display:none; color: #34a853; font-weight: bold;">Split Cells</div>
+                <div class="popup-item" data-action="delTable" style="color: #ea4335;">Delete Table</div>
+                <div class="popup-item" data-action="merge" id="merge-btn" style="display:none; color: #4285f4; font-weight: bold;">Merge Cells</div>
+            </div>
+        `;
+        document.body.appendChild(this.popup);
+
+        this.popup.addEventListener('mousedown', (e) => {
+            const action = e.target.dataset.action;
+            if (!action) return;
+
+            e.preventDefault(); // Удерживаем фокус
+            switch(action) {
+                case 'addRow':    this.tableHandler('row', 'add'); break;
+                case 'delRow':    this.tableHandler('row', 'del'); break;
+                case 'addCol':    this.tableHandler('col', 'add'); break;
+                case 'delCol':    this.tableHandler('col', 'del'); break;
+                case 'delTable':  this.tableHandler(null, 'delTable'); break;
+                case 'split':     this.tableHandler(null, 'split'); break;
+                case 'merge':     this.tableHandler(null, 'merge'); break;
+                case 'tableStyle': this.tableHandler(null, 'tableStyle', e.target.dataset.value); break;
+                case 'indent':    
+                case 'outdent':   
+                    document.execCommand(action, false, null); 
+                    break;
+            }
+
+            this.el.focus(); // Возвращаем фокус в редактор
+            this.popup.style.display = 'none';
+        });
+    }
+
+    setupEvents() {
+        this.toolbar.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn');
+            if (btn) {
+                const cmd = btn.dataset.cmd;
+                const val = btn.dataset.value || null;
+                this.execute(cmd, val, e); // Передаем 'e' третьим параметром
+            }
+        });
+        this.navToggle.addEventListener('click', () => {
+            this.navPanel.classList.toggle('active');
+            if (this.navPanel.classList.contains('active')) {
+                this.updateNavigation();
+            }
+        });
+        this.el.addEventListener('input', () => {
+            if (this.navPanel.classList.contains('active')) {
+                this.updateNavigation();
+            }
+        });
+        if (this.colorSidebar) {
+            this.colorSidebar.addEventListener('mousedown', (e) => {
+                const box = e.target.closest('.color-box');
+                if (box) {
+                    e.preventDefault(); 
+
+                    const cmd = box.dataset.cmd;
+                    const val = box.dataset.value || null;
+
+                    this.execute(cmd, val);
+                }
+            });
+        }
+
+        this.el.addEventListener('paste', (e) => {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    e.preventDefault();
+                    const file = item.getAsFile();
+                    const reader = new FileReader();
+
+                    reader.onload = (event) => {
+                        const img = new Image();
+                        img.src = event.target.result;
+
+                        img.onload = () => {
+                            const ratio = img.width / img.height;
+                            const initialWidth = img.width > 400 ? 400 : img.width;
+                        
+                            const html = `
+                                <div class="img-resizable" contenteditable="false" style="width: 300px;">
+                                    <div class="img-delete-btn" title="Remove">✕</div>
+                                    <div class="resizer-handle"></div>
+                                    <img src="${event.target.result}">
+                                </div><p></p>`;
+                            document.execCommand('insertHTML', false, html);
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        this.el.addEventListener('click', (e) => {
+            this.popup.style.display = 'none'; // Скрываем меню отступов
+
+            const allResizables = this.el.querySelectorAll('.img-resizable');
+            allResizables.forEach(el => el.classList.remove('active'));
+
+            if (e.target.classList.contains('img-delete-btn')) {
+                const resizable = e.target.closest('.img-resizable');
+                if (resizable) {
+                    resizable.remove();
+                }
+                return; // Прерываем, чтобы не сработали другие клики
+            }
+            const resizable = e.target.closest('.img-resizable');
+            if (resizable) {
+                this.el.querySelectorAll('.img-resizable').forEach(el => el.classList.remove('active'));
+                resizable.classList.add('active');
+            }
+        
+            const link = e.target.closest('a');
+            const li = e.target.closest('li');
+        
+            if (link) {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+
+                if (href.includes('://')) {
+                    this.openLink(link.href);
+                } else {
+                    this.openLinkEditor(link); 
+                }
+                return; 
+            }
+            if (li && li.closest('.todo-list')) {
+                const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+                const rect = li.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+            
+                if (clickX < 0 && (!range || range.startOffset === 0)) { 
+                    e.preventDefault();
+                    li.classList.toggle('done');
+                    this.el.focus();
+                } else {
+                }
+                return;
+            }
+
+            if (e.target.classList.contains('code-copy-btn')) {
+                const content = e.target.nextElementSibling.innerText;
+
+                navigator.clipboard.writeText(content).then(() => {
+                    const originalText = e.target.innerText;
+                    e.target.innerText = 'COPIED!';
+                    setTimeout(() => e.target.innerText = originalText, 1500);
+                }).catch(err => {
+                    console.error('Copy failed:', err);
+                });
+                return;
+            }
+
+            if (e.target.classList.contains('pass-btn')) {
+                const container = e.target.closest('.pass-container');
+                const content = container.querySelector('.pass-content');
+
+                if (e.target.classList.contains('copy-btn')) {
+                    navigator.clipboard.writeText(content.innerText).then(() => {
+                        const originalText = e.target.innerText;
+                        e.target.innerText = 'COPIED!';
+                        setTimeout(() => e.target.innerText = originalText, 1500);
+                    });
+                } else if (e.target.classList.contains('toggle-btn')) {
+                    const isMasked = content.classList.toggle('masked');
+                    e.target.innerText = isMasked ? 'Show' : 'Hide';
+                }
+                return;
+            }
+        });
+        this.el.addEventListener('contextmenu', (e) => {
+            const link = e.target.closest('a');
+            const li = e.target.closest('li');
+            const codeBlock = e.target.closest('.code-container, .pass-container');
+
+            const cell = e.target.closest('td');
+            const selectedCells = this.el.querySelectorAll('.selected-cell');
+
+            if (link) {
+                e.preventDefault();
+                this.openLinkEditor(link); // Редактируем всё: и ссылки, и комментарии
+            }
+
+            if (codeBlock) {
+                e.preventDefault();
+                if (confirm("Convert this block back to plain text?")) {
+                    const content = codeBlock.querySelector('.code-content, .pass-content');
+                    if (content) {
+                        codeBlock.replaceWith(content.innerText);
+                    }
+                }
+                return;
+            }
+
+            if (li || cell) {
+                e.preventDefault();
+                this.popup.style.display = 'block';
+                this.popup.style.left = e.clientX + 'px';
+                this.popup.style.top = e.clientY + 'px';
+            }
+
+            if (cell) {
+                this.lastActiveCell = cell;
+
+                const isMerged = (cell.colSpan > 1 || cell.rowSpan > 1);
+                document.getElementById('split-btn').style.display = isMerged ? 'block' : 'none';
+                document.getElementById('list-actions').style.display = li ? 'block' : 'none';
+                document.getElementById('table-actions').style.display = cell ? 'block' : 'none';
+                document.getElementById('merge-btn').style.display = (selectedCells.length === 2) ? 'block' : 'none';
+            }
+        });
+
+        this.toolbar.addEventListener('change', (e) => {
+            const select = e.target.closest('.btn-select');
+            if (!select) return;
+
+            const val = select.value;
+            const cmd = select.dataset.cmd || 'formatBlock'; // По умолчанию для заголовков
+            if (select.id === 'list-selector') {
+                const selection = window.getSelection();
+                if (!selection.rangeCount) return;
+            
+                let parentUL = selection.anchorNode.parentNode;
+                while (parentUL && parentUL.tagName !== 'UL' && parentUL !== this.el) {
+                    parentUL = parentUL.parentNode;
+                }
+            
+                const isAlreadyUL = parentUL && parentUL.tagName === 'UL';
+                const isCurrentTodo = isAlreadyUL && parentUL.classList.contains('todo-list');
+            
+                if (val === 'todo') {
+                    if (isAlreadyUL && !isCurrentTodo) {
+                        parentUL.classList.add('todo-list');
+                    } else if (isCurrentTodo) {
+                        parentUL.classList.remove('todo-list');
+                        document.execCommand('insertUnorderedList', false, null);
+                    } else {
+                        this.makeTodo();
+                    }
+                } else {
+                    if (isCurrentTodo) {
+                        parentUL.classList.remove('todo-list');
+                        if (val === 'insertOrderedList') document.execCommand(val, false, null);
+                    } else {
+                        document.execCommand(val, false, null);
+                    }
+                }
+            } else {
+                this.execute(cmd, val);
+            }
+        
+            select.value = ""; // Сброс селектора после выбора
+        });
+
+        let currentResizer = null;
+
+        this.el.addEventListener('wheel', (e) => {
+            const resizable = e.target.closest('.img-resizable');
+            if (resizable) {
+                e.preventDefault(); 
+
+                const delta = e.deltaY > 0 ? -30 : 30; 
+                const currentWidth = resizable.offsetWidth;
+                const newWidth = currentWidth + delta;
+            
+                const maxWidth = this.el.clientWidth - 80;
+                if (newWidth > 50 && newWidth < maxWidth) {
+                    resizable.style.width = newWidth + 'px';
+                }
+            }
+        }, { passive: false });
+
+        this.el.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('img-delete-btn')) {
+                e.preventDefault();
+                e.target.closest('.img-resizable').remove();
+                return;
+            }
+            if (e.target.classList.contains('resizer-handle')) {
+                e.preventDefault();
+                currentResizer = {
+                    container: e.target.closest('.img-resizable'),
+                    startX: e.clientX,
+                    startWidth: e.target.closest('.img-resizable').offsetWidth
+                };
+            
+                const onMouseMove = (moveEvent) => {
+                    if (currentResizer) {
+                        const diffX = moveEvent.clientX - currentResizer.startX;
+                        const newWidth = currentResizer.startWidth + diffX;
+
+                        const maxWidth = this.el.clientWidth - 80;
+                    
+                        if (newWidth > 50 && newWidth < maxWidth) {
+                            currentResizer.container.style.width = newWidth + 'px';
+                        }
+                    }
+                };
+            
+                const onMouseUp = () => {
+                    currentResizer = null;
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                };
+            
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            }
+
+            if (e.button !== 0) return;
+            const cell = e.target.closest('td');
+            this.clearCellSelection();
+            if (cell) {
+                this.isSelecting = true;
+                this.startCell = cell;
+                cell.classList.add('selected-cell');
+            }
+
+        });
+
+        this.el.addEventListener('mouseover', (e) => {
+            if (!this.isSelecting || !this.startCell) return;
+
+            const currentCell = e.target.closest('td');
+            if (!currentCell || currentCell === this.startCell) return;
+            const isNextTo = this.isAdjacent(this.startCell, currentCell);
+
+            if (isNextTo) {
+                this.clearCellSelection();
+                this.startCell.classList.add('selected-cell');
+                currentCell.classList.add('selected-cell');
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            this.isSelecting = false;
+        });
+        document.getElementById('btn-table-panel').addEventListener('click', () => {
+            const isHidden = this.tableToolbar.style.display === 'none';
+            this.tableToolbar.style.display = isHidden ? 'flex' : 'none';
+            if (isHidden) this.findToolbar.style.display = 'none';
+        });
+        
+        document.getElementById('btn-close-table').addEventListener('click', () => {
+            this.tableToolbar.style.display = 'none';
+        });
+
+        document.getElementById('btn-close-find').addEventListener('click', () => {
+            this.findToolbar.style.display = 'none';
+        });
+        document.getElementById('btn-insert-table').addEventListener('click', () => {
+            const rows = document.getElementById('table-rows').value;
+            const cols = document.getElementById('table-cols').value;
+            this.insertTable(rows, cols);
+            this.tableToolbar.style.display = 'none';
+        });
+        document.getElementById('dark-mode-toggle').addEventListener('click', () => this.toggleDarkMode());
+        document.getElementById('find-panel-toggle').addEventListener('click', () => {
+            const isHidden = this.findToolbar.style.display === 'none';
+            this.findToolbar.style.display = isHidden ? 'flex' : 'none';
+            if (isHidden) this.tableToolbar.style.display = 'none';
+        });
+
+        document.getElementById('btn-find-next').addEventListener('click', () => {
+            this.findText(document.getElementById('find-input').value);
+        });
+
+        document.getElementById('btn-replace').addEventListener('click', () => {
+            this.replaceText(document.getElementById('find-input').value, document.getElementById('replace-input').value, false);
+        });
+
+        document.getElementById('btn-replace-all').addEventListener('click', () => {
+            this.replaceText(document.getElementById('find-input').value, document.getElementById('replace-input').value, true);
+        });
+
+        document.getElementById('save-document-btn').addEventListener('click', () => {
+            this.saveDocument();
+        });
+    }
+
+    makeTodo() {
+        this.el.focus();
+        document.execCommand('insertUnorderedList', false, null);
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            let parent = selection.anchorNode.parentNode;
+            while (parent && parent.tagName !== 'UL' && parent !== this.el) {
+                parent = parent.parentNode;
+            }
+            if (parent && parent.tagName === 'UL') {
+                parent.classList.add('todo-list');
+            }
+        }
+    }
+    execute(cmd, val, event = null) {
+        this.el.focus();
+    
+        if (cmd === 'insertCodeWrapper') {
+            this.wrapInCode();
+            return;
+        }
+
+        if (cmd === 'insertPasswordBlock') {
+            this.wrapInPassword();
+            return;
+        }
+        if (cmd === 'formatBlock' && val === 'p') {
+            document.execCommand('removeFormat', false, null);
+            document.execCommand('foreColor', false, '#000000');
+            document.execCommand('backColor', false, 'transparent');
+            document.execCommand('justifyLeft', false, null);
+            document.execCommand('unlink', false, null);
+            
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const container = selection.anchorNode.parentElement.closest('.code-container, .pass-container');
+                
+                if (container) {
+                    const content = container.querySelector('.code-content, .pass-content');
+                    if (content) {
+                        container.replaceWith(content.innerText);
+                    }
+                }
+            }
+            document.execCommand(cmd, false, val);
+            return; // Выходим, чтобы не выполнять базовый execCommand ниже
+        }
+        if (cmd === 'createLink') {
+            const isComment = event && event.target.closest('[data-type="comment"]');
+            const promptMsg = isComment ? 'Enter Comment text:' : 'Enter URL:';
+            const defaultVal = isComment ? '' : 'https://';
+			
+			const sel = window.getSelection()
+			const range = sel.rangeCount ? sel.getRangeAt(0).cloneRange() : null
+			
+            this.prompt(promptMsg, defaultVal).then(url => {
+				if (url !== null && range) {
+					sel.removeAllRanges();
+					sel.addRange(range);
+					
+					const finalUrl = (isComment && url === '') ? '#' : url;
+					document.execCommand(cmd, false, finalUrl);
+					const selection = window.getSelection().anchorNode.parentNode;
+								
+					const link = selection.closest('a');
+					if (link) {
+						if (finalUrl.includes('://')) link.target = '_blank';
+						link.title = 'Right click to edit';
+					}
+				}
+			});
+        } else if (cmd === 'foreColor' || cmd === 'hiliteColor' || cmd === 'backColor') {
+            const selection = window.getSelection();
+            const selectedCells = Array.from(this.el.querySelectorAll('.selected-cell'));
+            if (!selection.isCollapsed) {
+                document.execCommand(cmd, false, val);
+                return;
+            }
+            if (selectedCells.length > 0) {
+                selectedCells.forEach(td => {
+                    if (cmd === 'hiliteColor' || cmd === 'backColor') {
+                        if (val === '#ffffff' || val === '#FFFFFF' || val === 'rgb(255, 255, 255)' || val === 'transparent') {
+                            td.style.removeProperty('background-color'); 
+                        } else {
+                            td.style.backgroundColor = val;
+                        }
+                    } else if (cmd === 'foreColor') {
+                        if (val === '#000000' || val === 'rgb(0, 0, 0)') {
+                            td.style.removeProperty('color');
+                        } else {
+                            td.style.color = val;
+                        }
+                    }
+                    if (!td.style.cssText || td.getAttribute('style') === '') {
+                        td.removeAttribute('style');
+                    }
+                });
+                return;
+            }
+        } else {
+            document.execCommand(cmd, false, val);
+        }
+    }
+
+    updateNavigation() {
+        this.navContent.innerHTML = '';
+        const headers = this.el.querySelectorAll('h1, h2, h3');
+        
+        headers.forEach((h, index) => {
+            const id = 'header-' + index;
+            h.id = id;
+
+            const link = document.createElement('a');
+            link.href = '#' + id;
+            link.className = `nav-item nav-${h.tagName.toLowerCase()}`;
+            link.innerText = h.innerText || 'Untitled';
+
+            link.onclick = (e) => {
+                e.preventDefault();
+                h.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            this.navContent.appendChild(link);
+        });
+    }
+
+    wrapInCode() {
+        this.el.focus();
+
+        const selection = window.getSelection();
+        const selectedText = selection.toString() || "Code_here...";
+        const codeHtml = `
+            <div class="code-container" contenteditable="false">
+                <button class="code-copy-btn">COPY</button>
+                <div class="code-content" contenteditable="true" spellcheck="false">${selectedText}</div>
+            </div><p></p>`;
+        document.execCommand('insertHTML', false, codeHtml);
+    }
+
+    wrapInPassword() {
+        this.el.focus();
+
+        const selection = window.getSelection();
+        const selectedText = selection.toString() || "Your_password";
+        
+        const passHtml = `
+            <div class="pass-container" contenteditable="false">
+                <div class="pass-controls">
+                    <button class="pass-btn toggle-btn">Show</button>
+                    <button class="pass-btn copy-btn">Copy</button>
+                </div>
+                <div class="pass-content masked" contenteditable="true" spellcheck="false">${selectedText}</div>
+            </div><p></p>`;
+
+        document.execCommand('insertHTML', false, passHtml);
+    }
+
+    insertTable(rows, cols) {
+        this.el.focus();
+        let tableHtml = '<table>';
+        for (let i = 0; i < rows; i++) {
+            tableHtml += '<tr>';
+            for (let j = 0; j < cols; j++) {
+                tableHtml += '<td><br></td>'; // <br> нужен для возможности кликнуть в пустую ячейку
+            }
+            tableHtml += '</tr>';
+        }
+        tableHtml += '</table><p><br></p>'; // Добавляем пустой абзац после таблицы для удобства
+        document.execCommand('insertHTML', false, tableHtml);
+    }
+    clearCellSelection() {
+        const selected = this.el.querySelectorAll('.selected-cell');
+        selected.forEach(el => el.classList.remove('selected-cell'));
+    }
+    isAdjacent(cell1, cell2) {
+        const row1 = cell1.parentNode.rowIndex;
+        const col1 = cell1.cellIndex;
+        const row2 = cell2.parentNode.rowIndex;
+        const col2 = cell2.cellIndex;
+
+        const rowDiff = Math.abs(row1 - row2);
+        const colDiff = Math.abs(col1 - col2);
+        return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
+    }
+
+    mergeSelectedCells() {
+        const selected = Array.from(this.el.querySelectorAll('.selected-cell'));
+        if (selected.length !== 2) return;
+
+        const [c1, c2] = selected;
+        const row1 = c1.parentNode.rowIndex;
+        const col1 = c1.cellIndex;
+        const row2 = c2.parentNode.rowIndex;
+        const col2 = c2.cellIndex;
+
+        if (row1 === row2) { // Горизонтальное объединение
+            c1.colSpan = (c1.colSpan || 1) + (c2.colSpan || 1);
+            c2.remove();
+        } else if (col1 === col2) { // Вертикальное объединение
+            c1.rowSpan = (c1.rowSpan || 1) + (c2.rowSpan || 1);
+            c2.remove();
+        }
+        this.clearCellSelection();
+    }
+
+    tableHandler(type, action, val) {
+        const cell = this.lastActiveCell;
+        if (!cell && action !== 'merge') return;
+        const table = cell ? cell.closest('table') : null;
+        const rowIndex = cell ? cell.parentNode.rowIndex : null;
+        const colIndex = cell ? cell.cellIndex : null;
+
+        if (action === 'split') {
+            const cell = this.lastActiveCell;
+            if (cell.colSpan > 1) {
+                cell.colSpan -= 1;
+                cell.parentNode.insertCell(cell.cellIndex + 1).innerHTML = '<br>';
+            } else if (cell.rowSpan > 1) {
+                cell.rowSpan -= 1;
+                const nextRow = cell.closest('table').rows[cell.parentNode.rowIndex + 1];
+                nextRow.insertCell(cell.cellIndex).innerHTML = '<br>';
+            }
+            this.popup.style.display = 'none';
+            return;
+        }
+
+        if (action === 'tableStyle') {
+            const table = this.lastActiveCell.closest('table');
+            table.classList.remove('grid-gray', 'grid-black', 'grid-none');
+            table.classList.add(val); // val — это наше data-value (grid-gray и т.д.)
+            this.popup.style.display = 'none';
+            return;
+        }
+        if (action === 'delTable') {
+            if (confirm("Delete the entire table?")) {
+                table.remove();
+            }
+            this.popup.style.display = 'none';
+            return;
+        }
+        if (action === 'merge') {
+            this.mergeSelectedCells();
+            this.popup.style.display = 'none';
+            return;
+        }
+        if (action === 'del') {
+            let hasMerged = false;
+            const table = cell.closest('table');
+            const rowIndex = cell.parentNode.rowIndex;
+            const colIndex = cell.cellIndex;
+        
+            if (type === 'row') {
+                const rowCells = Array.from(table.rows[rowIndex].cells);
+                hasMerged = rowCells.some(c => (c.rowSpan && c.rowSpan > 1) || (c.colSpan && c.colSpan > 1));
+            } else {
+                for (let r = 0; r < table.rows.length; r++) {
+                    const currentRow = table.rows[r];
+                    let currentVisualCol = 0;
+                    for (let c = 0; c < currentRow.cells.length; c++) {
+                        const checkCell = currentRow.cells[c];
+                        const colspan = checkCell.colSpan || 1;
+                        const rowspan = checkCell.rowSpan || 1;
+                        const cellStart = currentVisualCol;
+                        const cellEnd = currentVisualCol + colspan - 1;
+                        if (colIndex >= cellStart && colIndex <= cellEnd) {
+                            if (colspan > 1 || rowspan > 1) {
+                                hasMerged = true;
+                                break;
+                            }
+                        }
+                        currentVisualCol += colspan;
+                    }
+                    if (hasMerged) break;
+                }
+            }
+        
+            if (hasMerged) {
+                alert("Cannot delete: merged cells detected. Split them first.");
+                this.popup.style.display = 'none';
+                return;
+            }
+        }
+        if (type === 'row') {
+            if (action === 'add') {
+                const newRow = table.insertRow(rowIndex + 1);
+                const currentCellCount = table.rows[rowIndex].cells.length;
+                for (let i = 0; i < currentCellCount; i++) {
+                    newRow.insertCell(-1).innerHTML = '<br>';
+                }
+            } else {
+                if (table.rows.length === 1) {
+                    table.remove();
+                } else {
+                    table.deleteRow(rowIndex);
+                }
+            }
+        } 
+        else if (type === 'col') {
+            const totalCols = table.rows[0].cells.length;
+            if (action === 'add') {
+                Array.from(table.rows).forEach(r => {
+                    r.insertCell(colIndex + 1).innerHTML = '<br>';
+                });
+            } else {
+                if (totalCols === 1) {
+                    table.remove();
+                } else {
+                    Array.from(table.rows).forEach(r => {
+                        if (r.cells[colIndex]) r.deleteCell(colIndex);
+                    });
+                }
+            }
+        }
+        this.clearCellSelection();
+        this.lastActiveCell = null;
+        this.popup.style.display = 'none';
+    }
+    
+    toggleDarkMode() {
+        document.body.classList.toggle('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    findText(text) {
+        if (!text) return;
+        const found = window.find(text, false, false, true);
+        if (!found) alert("Text not found");
+    }
+
+    replaceText(findStr, replaceStr, all = false) {
+        const content = this.el.innerHTML;
+        if (all) {
+            const regex = new RegExp(findStr, 'g');
+            this.el.innerHTML = content.replace(regex, replaceStr);
+        } else {
+            this.el.innerHTML = content.replace(findStr, replaceStr);
+        }
+    }
+
+    openLinkEditor(link) {
+        const currentVal = link.getAttribute('href');
+        const isComment = !currentVal.includes('://');
+        const msg = isComment 
+            ? 'Edit Comment (leave empty to remove):' 
+            : 'Edit URL (leave empty to remove):';
+
+        this.prompt(msg, currentVal).then(newVal => {
+			if (newVal !== null) { // Если не нажали "Отмена"
+				if (newVal.trim() === '' || (isComment && newVal === '#')) {
+					const text = link.innerText;
+					link.replaceWith(text);
+				} else {
+					link.setAttribute('href', newVal);
+					link.title = 'Right click to edit';
+				}
+			}
+		});
+    }
+
+    isElectron() {
+        return navigator.userAgent.toLowerCase().includes('electron'); 
+    }
+
+    openLink(url) {
+        if (this.isElectron() && this.shell) return this.shell.openExternal(url);
+        window.open(url, '_blank');
+    }
+
+    openDocument() {
+      const purePath = decodeURIComponent(location.href).replace(/^file:\/\/\//i, '');
+      const fileName = purePath.split('/').pop();
+      document.title = fileName.replace(/\.html$/i, '');
+    }
+
+    updateSaveButton() {
+		var saveBtn = document.getElementById('save-document-btn');
+        if (this.isDocumentDirty) {
+            saveBtn.classList.add('dirty');
+            saveBtn.title = 'Save Document (Unsaved changes)';
+        } else {
+            saveBtn.classList.remove('dirty');
+            saveBtn.title = 'Save Document';
+        }
+    }
+	
+    initEditorObserver() {
+        const observer = new MutationObserver((mutations) => {
+            if (!this.isDocumentDirty) {
+                this.isDocumentDirty = true;
+                this.updateSaveButton();
+            }
+        });
+
+        var editor = document.getElementById('editor');
+        observer.observe(editor, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+        this.editorObserver = observer;
+    }
+	
+    saveDocument() {
+	  this.isDocumentDirty = false;
+      this.updateSaveButton();
+      const filename = document.title || 'index';
+      const head = document.head.innerHTML;
+      const body = document.body.innerHTML;
+      
+      const result = `<!DOCTYPE html><html><head>${head}</head><body>${body}</body></html>`;
+      if (this.isElectron() && this.fs && this.path) {
+        try {
+            let currentPath = decodeURI(location.pathname);
+            if (process.platform === 'win32' && currentPath.startsWith('/')) {
+                currentPath = currentPath.substring(1);
+            }
+            this.fs.writeFileSync(currentPath, result, 'utf8');
+    
+            console.log('Файл успешно сохранен по пути:', currentPath);
+            return; 
+        } catch (err) {
+            console.error('Ошибка при сохранении через Electron:', err);
+        }
+      }
+      const blob = new Blob([result], { type: 'text/html' });
+      const saveLink = document.createElement('a');
+      saveLink.href = URL.createObjectURL(blob);
+      saveLink.download = `${filename}.html`; // Имя файла для папки Downloads
+      document.body.appendChild(saveLink);
+      saveLink.click();
+      document.body.removeChild(saveLink);
+      URL.revokeObjectURL(saveLink.href);
+    }
+	
+	prompt(message, defaultValue = '') {
+      return new Promise(resolve => {
+        const overlay = document.getElementById('prompt-overlay')
+        const msg = document.getElementById('prompt-msg')
+        const input = document.getElementById('prompt-input')
+        const ok = document.getElementById('prompt-ok')
+        const cancel = document.getElementById('prompt-cancel')
+
+        msg.textContent = message
+        input.value = defaultValue
+
+        overlay.classList.remove('hidden')
+        input.focus()
+
+        function close(result) {
+          overlay.classList.add('hidden')
+          ok.onclick = cancel.onclick = null
+          resolve(result)
+        }
+
+        ok.onclick = () => close(input.value)
+        cancel.onclick = () => close(null)
+
+        input.onkeydown = e => {
+          if (e.key === 'Enter') ok.click()
+          if (e.key === 'Escape') cancel.click()
+        }
+      })
+    }
+}
+const myEditorInstance = new MyEditor('editor', 'toolbar');
+
+if (myEditorInstance.isElectron()) {
+    myEditorInstance.shell = require('electron').shell;
+    myEditorInstance.fs = require('fs');
+    myEditorInstance.path = require('path');
+}
+</script>
+</body>
+</html>
