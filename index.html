@@ -195,18 +195,19 @@
     
     <section class="py-4 bg-dark border-bottom">
       <div class="row align-items-center text-white">
+
         <div class="col-md-4 text-center px-md-3 mb-3 mb-md-0">
-          <h5 class="fw-bold">Support / Donate</h5>
-          <div class="d-flex justify-content-center gap-2 mt-2">
-            <a class="btn btn-sm btn-outline-light" onclick="P.ask()">
-              <img src="img/BTC.png" width="24"> BTC
-            </a>
-            <a class="btn btn-sm btn-outline-light" onclick="P.ask()">
-              <img src="img/ETH.png" width="24"> ETH
-            </a>
-            <a class="btn btn-sm btn-outline-light" onclick="P.ask()">
-              <img src="img/SOL.png" width="24"> SOL
-            </a>
+          <h5 class="fw-bold">Support the Project</h5>
+          <div class="btn-group shadow-sm" role="group" aria-label="Crypto Donations">
+            <button class="btn btn-outline-light btn-sm" onclick="P.copyCrypto('BTC', 'bc1q4uw6r98ly4e4xszgzm33gcayrup433rrantyqr')">
+              <span class="fw-bold">BTC</span>
+            </button>
+            <button class="btn btn-outline-light btn-sm" onclick="P.copyCrypto('ETH', '0x7ae3388CD70e308607Cc50A3e27Ca4dEcA89Ba4c')">
+              <span class="fw-bold">ETH</span>
+            </button>
+            <button class="btn btn-outline-light btn-sm" onclick="P.copyCrypto('SOL', 'CWRMpqTZZKRdxppxrThgWegiuRLxqALDh1XhoKXnYguH')">
+              <span class="fw-bold">SOL</span>
+            </button>
           </div>
         </div>
         
@@ -224,44 +225,20 @@
       </div>
     </section>
     
-    <div class="modal fade" id="ask" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="alert" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Support Us</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="P.clear()"></button>
+            <h5 id="alert_title" class="modal-title">&nbsp;</h5>
           </div>
-          <div class="modal-body">
-            <table class="table">
-              <thead>
-                <th></th><th>Coin</th><th>Address</th><th>Copy</th>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><img src="img/BTC.png" width="24"></td>
-                  <td>BTC</td>
-                  <td id="a_BTC">bc1q4uw6r98ly4e4xszgzm33gcayrup433rrantyqr</td>
-                  <td><button type="button" class="btn btn-secondary btn-sm"><i class="bi bi-files" onclick="P.copy('BTC')"></i></button></td>
-                </tr>
-                <tr>
-                  <td><img src="img/ETH.png" width="24"></td>
-                  <td>ETH</td>
-                  <td id="a_ETH">0x7ae3388CD70e308607Cc50A3e27Ca4dEcA89Ba4c</td>
-                  <td><button type="button" class="btn btn-secondary btn-sm"><i class="bi bi-files" onclick="P.copy('ETH')"></i></button></td>
-                </tr>
-                <tr>
-                  <td><img src="img/SOL.png" width="24"></td>
-                  <td>SOL</td>
-                  <td id="a_SOL">CWRMpqTZZKRdxppxrThgWegiuRLxqALDh1XhoKXnYguH</td>
-                  <td><button type="button" class="btn btn-secondary btn-sm"><i class="bi bi-files" onclick="P.copy('SOL')"></i></button></td>
-                </tr>
-              </tbody>
-            </table>
-            <p id="message">&nbsp;</p>
+          <div class="modal-body"><p id="alert_message">&nbsp;</p></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="btnCancel">Cancel</button>
+            <button type="button" class="btn btn-primary" id="btnOk">ОК</button>
           </div>
         </div>
       </div>
-    </div>
+    </div>    
   </div>
   
   <script src="js/script.js"></script>
