@@ -520,7 +520,7 @@ body.dark-theme #editor {
 
 
 #save-document-btn.dirty {
-    color: orange;          
+    color: red;          
     transform: scale(1.1);  
     animation: pulse 1s infinite; 
 }
@@ -590,21 +590,63 @@ body.dark-theme #editor {
 				<button class="btn" data-cmd="justifyRight">R</button>
 
 				<div class="divider"></div>
-				<button class="btn" id="btn-table-panel" title="Insert Table">📅</button>
+				<button class="btn" id="btn-table-panel" title="Insert Table">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M3 5H21V19H3V5Z"/><path d="M3 12H21"/><path d="M12 5V19"/>
+				</svg>
+				</button>
+				
 				<select class="btn-select" id="list-selector">
-					<option value="" selected disabled>Lists...</option>
-					<option value="insertUnorderedList">Bullet</option>
-					<option value="insertOrderedList">Numbered</option>
-					<option value="todo">Todo List</option>
+				<option value="" selected disabled>Lists...</option>
+				<option value="insertUnorderedList">Bullet</option>
+				<option value="insertOrderedList">Numbered</option>
+				<option value="todo">Todo List</option>
 				</select>
-				<button class="btn" data-cmd="createLink" title="Add Link">🔗</button>
-				<button class="btn" data-cmd="createLink" data-type="comment" title="Add Comment">💬</button>
-				<button class="btn" data-cmd="insertCodeWrapper" title="Insert Code Block">💻</button>
-				<button class="btn" data-cmd="insertPasswordBlock" title="Insert Password Block">🔒</button>
-				<button class="btn" id="dark-mode-toggle" title="Toggle Dark/Light Mode">🌓</button>
-				<button class="btn" id="find-panel-toggle" title="Find and Replace">🔍</button>
+
+				<button class="btn" data-cmd="createLink" title="Add Link">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+				<path d="M3.9 12c0-2.3 1.9-4.2 4.2-4.2h3v2h-3c-1.2 0-2.2 1-2.2 2.2s1 2.2 2.2 2.2h3v2h-3C5.8 16.2 3.9 14.3 3.9 12zm6.1 1h4v-2h-4v2zm6.8-5.2h-3v2h3c1.2 0 2.2 1 2.2 2.2s-1 2.2-2.2 2.2h-3v2h3c2.3 0 4.2-1.9 4.2-4.2s-1.9-4.2-4.2-4.2z"/>
+				</svg>
+				</button>
+
+				<button class="btn" data-cmd="createLink" data-type="comment" title="Add Comment">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+				<path d="M4 4h16v12H7l-3 3V4zm2 2v8h12V6H6z"/>
+				</svg>
+				</button>
+
+				<button class="btn" data-cmd="insertCodeWrapper" title="Insert Code Block">
+				<b>&lt;&nbsp;&gt;</b>
+				</button>
+
+				<button class="btn" data-cmd="insertPasswordBlock" title="Insert Password Block">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+				<path d="M12 2C9.2 2 7 4.2 7 7v3H5v12h14V10h-2V7c0-2.8-2.2-5-5-5zm-3 5c0-1.7 1.3-3 3-3s3 1.3 3 3v3H9V7z"/>
+				</svg>
+				</button>
+
+				<button class="btn" id="dark-mode-toggle" title="Toggle Dark/Light Mode">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+				<path d="M12 2a10 10 0 1 0 10 10A8 8 0 0 1 12 2z"/>
+				</svg>
+				</button>
+
+				<button class="btn" id="find-panel-toggle" title="Find and Replace">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<circle cx="11" cy="11" r="6"/>
+				<line x1="16" y1="16" x2="21" y2="21"/>
+				</svg>
+				</button>
+
 				<div class="divider"></div>
-				<button class="btn" id="save-document-btn" title="Save Document">💾</button>
+
+				<button class="btn" id="save-document-btn" title="Save Document">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M17 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4z"/>
+				<circle cx="12" cy="14" r="3"/>
+				<path d="M6 5h8v4H6z"/>
+				</svg>
+				</button>
 			</div>
 			
 			<div id="table-toolbar" class="sub-toolbar-full" style="display: none;">
