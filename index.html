@@ -96,16 +96,24 @@
             </thead>
             <tbody>
               <tr>
-                <td>Yandex.Disk</td>
+                <td><a href="https://koofr.eu" target="_blank">Koofr</td>
+                <td>10 GB</td>
+              </tr>
+              <tr>
+                <td><a href="https://infini-cloud.net" target="_blank">Infini-cloud</td>
+                <td>20 GB</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.strato.de/cloud-speicher" target="_blank">HiDrive</a></td>
                 <td>5 GB</td>
               </tr>
               <tr>
-                <td>CloudMe</td>
-                <td>3 GB</td>
+                <td><a href="https://www.pcloud.com" target="_blank">pCloud</a></td>
+                <td>10 Gb</td>
               </tr>
               <tr>
-                <td>4shared</td>
-                <td>15 GB</td>
+                <td><a href="https://www.storegate.com" target="_blank">Storegate</a></td>
+                <td>2 Gb</td>
               </tr>
             </tbody>
           </table>
@@ -115,20 +123,20 @@
     </section>
 
     <section class="py-5 bg-white border-bottom">
-      <h2 class="hideme text-center">Connecting to Yandex.Disk via WebDAV</h2>
+      <h2 class="hideme text-center">Connecting to Koofr via WebDAV</h2>
       <div class="container" style="display: none;">
         <br>
         <ol>
-          <li>Register an account on <a href="https://passport.yandex.com/registration" target="_blank">yandex.ru</a>.</li>
-          <li>Create an <strong>application password</strong> for WebDAV access: <a href="https://id.yandex.ru/security/app-passwords" target="_blank">Yandex App Passwords</a>.</li>
+          <li>Register an account on <a href="https://app.koofr.net/login" target="_blank">https://app.koofr.net/login</a>.</li>
+          <li>Create an <strong>application password</strong> for WebDAV access: <a href="https://app.koofr.net/app/admin/preferences/password" target="_blank">Preferences - Password</a>.</li>
           <li>Launch the <strong>Atlaskey</strong> program.</li>
           <li>On first launch, create a <strong>master key</strong> for the secure database. This key will serve as the password for your encrypted ZIP archives.<br>
               Stored in the user's Documents folder (platform-dependent path): <code>documents\atlaskey\config.zip</code></li>
           <li>Go to the <strong>Tools</strong> tab and install required components by following on-screen instructions.</li>
           <li>Go to the <strong>WebDAV</strong> tab and enter your connection details:</li>
           <ul>
-            <li>WebDAV URL: https://webdav.yandex.ru</li>
-            <li>User: your Yandex username (part of email before @yandex.ru)</li>
+            <li>WebDAV URL: https://app.koofr.net/dav/Koofr</li>
+            <li>User: your e-mail (used in step 1)</li>
             <li>Password: WebDAV application password (created in step 2)</li>
           </ul>
           <li>Click <strong>Check Connection</strong>. If successful, the button will turn green.</li>
